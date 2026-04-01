@@ -755,13 +755,9 @@
         <h3>Nasz Dział Sprzedaży</h3>
         <p class="intro-text">Jesteśmy tutaj, aby pomóc w organizacji Twojego idealnego wydarzenia!</p>
         
-        <!-- Usunięto sales-department-contact stąd -->
-
         <div id="sales-team-cards" class="sales-team-cards">
             <!-- Karty zespołu sprzedaży będą ładowane przez JS -->
         </div>
-
-        <!-- USUNIĘTO conference-slider-section Z TEJ STRONY -->
     </div>
     <!-- KONIEC NOWEJ STRONY -->
 
@@ -812,13 +808,10 @@
 
 
         const GALLERY_IMAGE_CHANGE_INTERVAL_MS = 5 * 1000; // Zmiana zdjęcia w górnej galerii co 5 sekund
-        // const CONFERENCE_SLIDER_CHANGE_INTERVAL_MS = 7 * 1000; // Niepotrzebny już interwał, bo slidera sal nie ma na sales-screen
-
+        
         let currentGalleryImageIndex = 0;
         let galleryInterval = null;
-        // let currentConferenceImageIndex = 0; // Niepotrzebne
-        // let conferenceSliderInterval = null; // Niepotrzebne
-
+        
         // Referencje do elementów DOM
         const mainContent = document.getElementById('main-content');
         const promoScreen = document.getElementById('promo-screen');
@@ -835,9 +828,12 @@
 
         async function fetchData() {
             try {
-                const response = await fetch('data.json');
+                // Ta ścieżka 'data.json' działa, gdy plik data.json jest w tym samym katalogu
+                // co index.html na GitHub Pages (lub innym serwerze webowym).
+                const response = await fetch('data.json'); 
+                
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
                 }
                 const data = await response.json();
                 
@@ -848,7 +844,7 @@
                 console.log("Data loaded from JSON:", data);
             } catch (error) {
                 console.error("Error fetching data:", error);
-                // Ustaw wartości domyślne w przypadku błędu
+                // Ustaw wartości domyślne w przypadku błędu, aby strona się nie zawiesiła
                 todayMeetings = [];
                 conferenceRoomImages = [];
                 salesTeamMembers = [];
@@ -908,7 +904,7 @@
                     const clientLogoBanner = document.createElement('div');
                     clientLogoBanner.className = 'client-logo-banner';
                     const clientLogoImg = document.createElement('img');
-                    clientLogoImg.src = meeting.clientLogo;
+                    clientLogoImg.src = meeting.clientLogo; // Bezpośrednia ścieżka, bo wszystko jest w głównym katalogu
                     clientLogoImg.alt = `Logo ${meeting.title.split(' - ')[1] || 'Klienta'}`;
                     clientLogoBanner.appendChild(clientLogoImg);
                     wrapper.appendChild(clientLogoBanner);
@@ -1092,7 +1088,7 @@
 
             conferenceRoomImages.forEach((imageName, index) => {
                 const img = document.createElement('img');
-                img.src = imageName;
+                img.src = imageName; // Bezpośrednia ścieżka
                 img.alt = `Sala konferencyjna ${index + 1}`;
                 img.classList.add('gallery-image');
                 if (index === 0) {
@@ -1119,7 +1115,7 @@
                 const card = document.createElement('div');
                 card.className = 'sales-card';
                 card.innerHTML = `
-                    <img src="${member.photo}" alt="${member.name}">
+                    <img src="${member.photo}" alt="${member.name}"> <!-- Bezpośrednia ścieżka -->
                     <h5>${member.name}</h5>
                     <p>E-mail: ${member.email}</p> 
                     <p>Telefon: ${member.phone}</p> 
@@ -1128,43 +1124,6 @@
             });
         }
         
-        // Ta funkcja nie jest już wywoływana na sales-screen
-        function startConferenceSlider() {
-            // const sliderContainer = document.getElementById('conference-slider-container');
-            // if (!sliderContainer) return; // Upewnij się, że element istnieje
-            // sliderContainer.innerHTML = ''; 
-
-            // if (conferenceRoomImages.length === 0) return;
-
-            // conferenceRoomImages.forEach((imageName, index) => {
-            //     const img = document.createElement('img');
-            //     img.src = imageName;
-            //     img.alt = `Sala konferencyjna ${index + 1}`;
-            //     img.classList.add('conference-slider-image');
-            //     if (index === 0) {
-            //         img.classList.add('active');
-            //     }
-            //     sliderContainer.appendChild(img);
-            // });
-
-            // currentConferenceImageIndex = 0;
-            // if (conferenceRoomImages.length > 1) {
-            //     if (conferenceSliderInterval) clearInterval(conferenceSliderInterval); 
-            //     conferenceSliderInterval = setInterval(changeConferenceSliderImage, CONFERENCE_SLIDER_CHANGE_INTERVAL_MS);
-            // }
-        }
-
-        // Ta funkcja nie jest już wywoływana na sales-screen
-        function changeConferenceSliderImage() {
-            // const images = document.querySelectorAll('.conference-slider-image');
-            // if (images.length === 0) return;
-
-            // images[currentConferenceImageIndex].classList.remove('active');
-            // currentConferenceImageIndex = (currentConferenceImageIndex + 1) % images.length;
-            // images[currentConferenceImageIndex].classList.add('active');
-        }
-
-
         // --- START/STOP FUNKCJI DLA GŁÓWNEGO EKRANU ---
         function startMainScreen() {
             console.log('START: Main Screen');
@@ -1192,7 +1151,6 @@
                 promoScreen.classList.add('active'); 
             }, 10); 
             
-            // Tylko jedna galeria na promo screen
             loadGalleryImages();
             currentGalleryImageIndex = 0;
             if (conferenceRoomImages.length > 1) {
@@ -1219,14 +1177,11 @@
             }, 10);
 
             loadSalesTeamCards(); 
-            // startConferenceSlider() - usunięte z sales-screen
         }
 
         function stopSalesScreen() {
             console.log('STOP: Sales Screen');
             salesScreen.classList.remove('active');
-            // if (conferenceSliderInterval) clearInterval(conferenceSliderInterval); // usunięte z sales-screen
-            // conferenceSliderInterval = null;
             setTimeout(() => {
                 salesScreen.style.display = 'none';
             }, 1000);
