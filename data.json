@@ -1,123 +1,64 @@
 {
-
   "todayMeetings": [
-
     {
-
-      "title": "Konferencja Biznesowa - pupcia",
-
+      "title": "Konferencja Biznesowa - Rossmann",
       "room": "Posnania",
-
       "date": "25 października 2023",
-
-      "description": " ",
-
-      "clientLogo": "rossmann_logo.png",
-
-      "status": "upcoming"
-
+      "description": "Spotkanie zarządu i kierowników regionów w celu omówienia strategii rozwoju na nadchodzący rok.",
+      "clientLogo": "rossmann_logo.png"
     },
-
     {
-
-      "title": "Warsztat 'Nowe kartofelk'",
-
+      "title": "Warsztat 'Nowe Technologie'",
       "room": "Malta",
-
       "date": "25 października 2023",
-
-      "description": " ",
-
-      "clientLogo": "google_logo.png",
-
-      "status": "upcoming"
-
+      "description": "Praktyczne warsztaty dla deweloperów z wykorzystania najnowszych technologii w frontendzie i backendzie.",
+      "clientLogo": "google_logo.png"
     },
-
     {
-
       "title": "Rekrutacja Inżynierów II",
-
       "room": "Gdańsk",
-
       "date": "26 października 2023",
-
-      "description": " ",
-
-      "clientLogo": "tech_recruitment_logo.png",
-
-      "status": "upcoming"
-
+      "description": "Sesje rekrutacyjne z kandydatami na stanowiska inżynierskie w dziale R&D.",
+      "clientLogo": "tech_recruitment_logo.png"
     },
-
     {
-
-      "title": "Szkolenie BHP",
-
-      "room": "Wawel",
-
-      "date": "27 października 2023",
-
-      "description": " ",
-
-      "clientLogo": "default_logo.png",
-
-      "status": "upcoming"
-
+      "title": "Szkolenie Sprzedażowe - KBC",
+      "room": "Warta",
+      "date": "26 października 2023",
+      "description": "Intensywne szkolenie z technik sprzedaży i obsługi klienta dla nowego zespołu handlowego.",
+      "clientLogo": "kbc_logo.png"
+    },
+    {
+      "title": "Spotkanie z Klientami - Global Solutions",
+      "room": "Bałtyk",
+      "date": "26 października 2023",
+      "description": "Prezentacja nowych produktów i usług dla kluczowych partnerów biznesowych.",
+      "clientLogo": "global_solutions_logo.png"
     }
-
   ],
-
   "conferenceRoomImages": [
-
     "sala_konferencyjna_1.jpg",
-
     "sala_konferencyjna_2.jpg",
-
-    "sala_konferencyjna_3.jpg",
-
-    "sala_konferencyjna_4.jpg"
-
+    "sala_konferencyjna_3.jpg"
   ],
-
   "salesTeamMembers": [
-
     {
-
       "photo": "sales_person_1.jpg",
-
       "name": "Mikołaj Mosiądz",
-
       "email": "Mikolaj.Mosiadz@accor.com",
-
       "phone": "+48 123 456 789"
-
     },
-
     {
-
       "photo": "sales_person_3.jpg",
-
       "name": "Mirella Kwiatkiewicz",
-
       "email": "Mirella.Kwiatkiewicz@accor.com",
-
       "phone": "+48 987 654 321"
-
     },
-
     {
-
       "photo": "sales_person_2.jpg",
-
       "name": "Adriana Los",
-
       "email": "Adriana.Los@accor.com",
-
       "phone": "+48 555 111 222"
-
     }
-
   ]
-
 }
