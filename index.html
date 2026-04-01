@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novotel - Konferencje Dziś</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ================================================================ */
+        /* === NIE EDYTOWAĆ TEJ SEKCJI! ZMIANY MOGĄ USZKODZIĆ WYGLĄD! === */
+        /* ========================================================================= */
+
+        :root {
+            --novotel-blue-dark: #003366; /* Ciemny, głęboki granat */
+            --novotel-blue-light: #0070c0; /* Wyraźny niebieski */
+            --novotel-orange: #f28c00; /* Energetyczny pomarańcz */
+            --novotel-white-text: #ffffff;
+            --novotel-grey-dark: #222222; /* Bardziej kontrastowy ciemny szary */
+            --novotel-grey-medium: #555555; /* Bardziej kontrastowy średni szary */
+            --novotel-grey-light: #f5f5f5; /* Bardzo jasny szary dla tła kafelków */
+            --novotel-white-bg: #ffffff;
+            --border-radius-base: 12px; /* Większe zaokrąglenia */
+
+            --active-border-color: #E74C3C; /* Wyraźna czerwień dla aktywnego */
+            --active-text-color: var(--novotel-blue-dark);
+            
+            --in-progress-banner-bg: #2ECC71; /* Wyrazisty zielony dla "W TRAKCIE" */
+            --in-progress-banner-text: var(--novotel-white-text);
+
+            --client-logo-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 40px; /* Zwiększony padding ogólny */
+            background-color: var(--novotel-grey-light);
+            color: var(--novotel-grey-dark);
+            display: flex;
+            justify-content: center; /* Wyśrodkowanie kontenera */
+            align-items: center; /* Wyśrodkowanie w pionie */
+            min-height: 100vh;
+            box-sizing: border-box;
+            overflow: hidden; /* Dodano, aby uniknąć scrollbarów na body */
+            position: relative; /* Dla kontekstu pozycjonowania ekranu promocyjnego */
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 1800px; /* Maksymalna szerokość dla układu poziomego */
+            display: flex;
+            gap: 40px; /* Odstęp między dwiema głównymi kolumnami */
+            height: calc(100vh - 80px); /* Dopasowanie do wysokości okna minus padding body */
+            overflow: hidden; /* Dodano, aby main-wrapper nie wystawał poza body w przypadku przewijania */
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out; /* Płynne znikanie/pojawianie się */
+            opacity: 1; /* Domyślnie widoczny */
+            visibility: visible;
+        }
+
+        .header-section {
+            flex: 0 0 35%; /* Nagłówek zajmuje 35% szerokości, nie kurczy się ani nie rośnie */
+            background-color: var(--novotel-blue-dark);
+            color: var(--novotel-white-text);
+            padding: 45px 30px; /* Znacząco większy padding */
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15); /* Wyraźniejszy cień */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container {
+            margin-bottom: 35px; /* Większy margines */
+        }
+
+        .logo-container img {
+            max-width: 350px; /* Nieco mniejsze logo dla lepszego dopasowania w kolumnie */
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        #current-time {
+            font-size: 7.5em; /* Nieco mniejszy czas dla lepszego dopasowania */
+            font-weight: 700;
+            color: var(--novotel-white-text);
+            letter-spacing: 2px; /* Lepsza czytelność */
+            margin-bottom: 12px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); /* Wyraźniejszy cień dla czasu */
+        }
+
+        #current-date {
+            font-size: 2.5em; /* Nieco mniejsza data */
+            color: var(--novotel-grey-light);
+            font-weight: 400;
+        }
+
+        .meetings-section-wrapper {
+            flex: 1; /* Sekcja spotkań zajmuje pozostałą dostępną przestrzeń */
+            background-color: var(--novotel-white-bg);
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15); /* Wyraźniejszy cień */
+            overflow: hidden; /* Ukrywa domyślny scrollbar */
+            position: relative; /* Ważne dla pozycjonowania przewijanej zawartości */
+            padding: 35px 40px; /* Dopasowany padding */
+            display: flex;
+            flex-direction: column; /* Aby zawartość w środku mogła być wyrównana w pionie */
+        }
+
+        .meetings-section-header {
+            position: relative;
+            z-index: 10;
+            background-color: var(--novotel-white-bg);
+            padding-bottom: 22px;
+            margin-bottom: 0;
+            box-shadow: 0 8px 10px -5px rgba(0,0,0,0.1);
+        }
+
+        .meetings-section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, var(--novotel-white-bg) 100%);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* ZMIENIONO ROZMIAR I WYŚRODKOWANIE DLA H2 */
+        .meetings-section h2 {
+            font-size: 3.5em; /* Zwiększono rozmiar czcionki */
+            color: var(--novotel-blue-dark);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-weight: 600;
+            padding-top: 10px; /* Dodatkowy padding dla lepszego wyglądu */
+        }
+
+        .meeting-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            position: relative;
+            overflow-y: auto;
+            padding-top: 30px;
+            padding-right: 0;
+            flex-grow: 1;
+            scroll-behavior: smooth;
+        }
+        
+        /* UKRYWANIE SUWAKA */
+        .meeting-list::-webkit-scrollbar {
+            display: none;
+        }
+        .meeting-list {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* KONIEC UKRYWANIA SUWAKA */
+
+
+        .meeting-item-wrapper {
+            position: relative; /* Upewniamy się, że jest relative */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: var(--border-radius-base); 
+            overflow: hidden; 
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1); 
+            transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out; 
+            border-left: 8px solid var(--novotel-blue-light); /* PRZENIESIONO TUTAJ */
+            z-index: 1; /* DODANO: aby border był widoczny pod ewentualnymi cieniami */
+        }
+        /* Dodatkowa klasa dla aktywnego wrappera */
+        .meeting-item-wrapper.active-wrapper { 
+            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25);
+            border-left: 8px solid var(--active-border-color); /* PRZENIESIONO TUTAJ */
+        }
+        /* Dodatkowa klasa dla rozwiniętego wrappera */
+        .meeting-item-wrapper.expanded-wrapper {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            transform: translateY(-8px);
+        }
+
+
+        .client-logo-banner {
+            width: 100%;
+            background-color: var(--novotel-grey-light); /* Zmieniono na kolor tła kafelka */
+            padding: 20px 15px;
+            border-top-left-radius: var(--border-radius-base);
+            border-top-right-radius: var(--border-radius-base);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* box-shadow: 0 3px 8px rgba(0,0,0,0.15); */ /* USUNIĘTO: niepotrzebne, bo baner ma się łączyć z kafelkiem */
+            z-index: 4;
+            min-height: 110px;
+            /* border-bottom: 2px solid var(--novotel-grey-light); */ /* USUNIĘTO: aby baner płynnie łączył się z kafelkiem */
+        }
+
+        .client-logo-banner img {
+            max-width: 90%; 
+            max-height: 95px; /* ZWIĘKSZONO WYSOKOŚĆ LOGO */
+            width: auto; 
+            height: auto; 
+            object-fit: contain; 
+            object-position: center; 
+            opacity: 1; /* Zwiększono opóźnienie dla lepszej widoczności */
+            /* border: 1px solid var(--novotel-grey-medium); */ /* USUNIĘTO: obramowanie wokół logo */
+            /* border-radius: var(--border-radius-base); */ /* USUNIĘTO: zaokrąglone rogi dla logo */
+            /* padding: 5px; */ /* USUNIĘTO: padding wewnątrz ramki logo */
+            /* background-color: var(--novotel-white-bg); */ /* USUNIĘTO: białe tło dla logo, jeśli tło banera jest już jasne */
+        }
+
+
+        .meeting-item {
+            background-color: var(--novotel-grey-light);
+            /* border-left: 8px solid var(--novotel-blue-light); */ /* USUNIĘTO STĄD */
+            padding: 30px;
+            border-radius: var(--border-radius-base);
+            box-shadow: none; /* USUNIĘTO: domyślny cień, który tworzył by linię pod bannerem */
+            transition: border-color 0.3s ease, padding 0.5s ease-in-out, margin 0.5s ease-in-out, transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out; 
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 2; /* Upewnij się, że zawartość jest nad borderem wrappera */
+            overflow: hidden;
+            border-top-left-radius: 0; /* DODANO: aby kafelek nie miał zaokrąglenia u góry, bo baner je ma */
+            border-top-right-radius: 0; /* DODANO: aby kafelek nie miał zaokrąglenia u góry, bo baner je ma */
+            margin-top: -10px; /* DODANO: aby kafelek lekko zachodził na baner, tworząc jedność */
+            padding-top: 40px; /* DODANO: aby treść kafelka nie była zbyt blisko logo */
+        }
+        
+        .meeting-item .description.expandable {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0; 
+            transition: max-height 0.6s ease-in-out, opacity 0.6s ease-in-out, margin-top 0.6s ease-in-out;
+            font-size: 1.15em;
+            line-height: 1.4;
+            color: var(--novotel-grey-dark);
+        }
+
+        .meeting-item.expanded {
+            padding-bottom: 60px;
+            margin-bottom: 25px; /* Margines po rozwinięciu */
+            /* Transform i shadow są teraz na wrapperze .expanded-wrapper */
+        }
+        
+        .meeting-item.expanded .description.expandable {
+            max-height: 280px;
+            opacity: 1;
+            margin-top: 20px;
+        }
+
+
+        .meeting-item.active {
+            /* border-left: 8px solid var(--active-border-color); */ /* USUNIĘTO STĄD */
+            box-shadow: none; /* Cień jest teraz na wrapperze */
+            z-index: 3;
+        }
+
+        .meeting-item.active h3 {
+            color: var(--active-text-color);
+        }
+        .meeting-item.active p {
+            color: var(--active-text-color);
+        }
+        .meeting-item.active p::before {
+            filter: brightness(0.2) sepia(1) hue-rotate(-20deg) saturate(5);
+        }
+
+        .in-progress-banner {
+            background-color: var(--in-progress-banner-bg);
+            color: var(--novotel-white-text);
+            text-align: center;
+            padding: 15px 22px;
+            border-bottom-left-radius: var(--border-radius-base);
+            border-bottom-right-radius: var(--border-radius-base);
+            font-size: 1.4em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            margin-top: -10px;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1;
+            animation: pulseBanner 1.5s infinite alternate;
+        }
+        @keyframes pulseBanner {
+            from { transform: scaleY(1); opacity: 1; }
+            to { transform: scaleY(1.03); opacity: 0.98; }
+        }
+
+        .meeting-item h3 {
+            font-size: 2.2em;
+            margin: 0 0 15px 0;
+            color: var(--novotel-blue-dark);
+            font-weight: 600;
+        }
+
+        .meeting-item p {
+            font-size: 1.4em;
+            margin: 12px 0;
+            color: var(--novotel-grey-medium);
+            display: flex;
+            align-items: center;
+        }
+        /* Zmieniono rozmiar czcionki dla nazwy sali */
+        .meeting-item p.room {
+            font-size: 1.6em; /* Powiększenie */
+            font-weight: 600; /* Pogrubienie dla lepszej widoczności */
+            color: var(--novotel-blue-dark); /* Możesz zmienić kolor, jeśli chcesz */
+        }
+
+        .meeting-item p.description::before {
+            content: none;
+        }
+
+
+        .meeting-item p::before {
+            content: '';
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            margin-right: 15px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            vertical-align: middle;
+            filter: grayscale(100%) brightness(0.4);
+            transition: filter 0.3s ease;
+        }
+
+        /* --- PRZYWRÓCONO IKONKĘ PRZY NAZWIE SALI --- */
+        .meeting-item .room::before {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>');
+        }
+        /* --- KONIEC ZMIAN --- */
+        
+        .meeting-item .date::before {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
+        }
+
+
+        .no-meetings-message {
+            text-align: center;
+            font-size: 2.5em;
+            color: var(--novotel-grey-medium);
+            margin-top: 60px;
+            padding: 50px;
+            background-color: var(--novotel-grey-light);
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            display: none; /* Domyślnie ukryte */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(100% - 100px);
+        }
+
+        /* --- STYLES FOR PROMOTIONAL SCREEN (TERAZ BEZ SPRZEDAWCÓW) --- */
+        #promo-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--novotel-grey-light); 
+            color: var(--novotel-grey-dark); 
+            display: none; 
+            flex-direction: column;
+            justify-content: flex-start; 
+            align-items: center;
+            text-align: center;
+            opacity: 0; 
+            transition: opacity 1s ease-in-out;
+            z-index: 1000; 
+            padding: 40px;
+            box-sizing: border-box;
+            gap: 20px; 
+            overflow-y: auto; 
+        }
+        #promo-screen::-webkit-scrollbar { display: none; }
+        #promo-screen { -ms-overflow-style: none; scrollbar-width: none; }
+
+        #promo-screen.active {
+            display: flex; 
+            opacity: 1; 
+        }
+
+        #promo-screen .promo-logo-container {
+            margin-bottom: 20px;
+        }
+
+        #promo-screen .promo-logo-container img {
+            max-width: 400px;
+            height: auto;
+            opacity: 0.95;
+        }
+
+        #promo-screen h3 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: var(--novotel-blue-dark); 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
+        }
+
+        #promo-screen p {
+            font-size: 2em;
+            margin-bottom: 15px;
+            font-weight: 400;
+            line-height: 1.3;
+            color: var(--novotel-grey-dark); 
+            max-width: 80%; 
+        }
+
+        .gallery-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 1600px;
+            margin-top: 30px;
+            height: 35vh; /* Wysokość dla galerii */
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .gallery-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            border-radius: var(--border-radius-base);
+        }
+
+        .gallery-image.active {
+            opacity: 1;
+        }
+
+        .promo-contact-info { /* Nowe style dla danych kontaktowych na ekranie promocyjnym */
+            margin-top: 40px;
+            padding: 0px 40px; /* Zredukowany padding, bo nie ma tła */
+            width: 100%;
+            max-width: 1000px; /* Maksymalna szerokość dla czytelności */
+            text-align: center; /* Wyśrodkowanie tekstu */
+            display: flex; /* Dodane dla Flexbox */
+            flex-direction: column; /* Ułożenie elementów w kolumnie */
+            align-items: center; /* Wyśrodkowanie elementów w poziomie */
+        }
+        .promo-contact-info h4 {
+            font-size: 2.5em;
+            color: var(--novotel-blue-dark);
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .promo-contact-info p {
+            font-size: 1.8em;
+            margin: 10px 0;
+            color: var(--novotel-grey-dark);
+            font-weight: 400;
+            max-width: 100%; /* Upewnij się, że tekst nie jest przycinany */
+        }
+
+        /* --- KONIEC STYLI PROMOCYJNYCH --- */
+
+
+        /* --- STYLES FOR DEDICATED SALES SCREEN --- */
+        #sales-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--novotel-grey-light); 
+            color: var(--novotel-grey-dark); 
+            display: none; /* Domyślnie ukryty */
+            flex-direction: column;
+            justify-content: flex-start; 
+            align-items: center;
+            text-align: center;
+            opacity: 0; 
+            transition: opacity 1s ease-in-out;
+            z-index: 1000; 
+            padding: 40px;
+            box-sizing: border-box;
+            gap: 30px; 
+            overflow-y: auto; 
+        }
+        #sales-screen::-webkit-scrollbar { display: none; }
+        #sales-screen { -ms-overflow-style: none; scrollbar-width: none; }
+
+        #sales-screen.active {
+            display: flex; 
+            opacity: 1; 
+        }
+
+        #sales-screen h3 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: var(--novotel-blue-dark); 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
+        }
+        /* --- Zwiększony rozmiar dla tekstu "Jesteśmy tutaj..." --- */
+        #sales-screen p.intro-text { /* Dodano klasę do p, aby nie wpływać na inne p */
+            font-size: 2.5em; /* Jeszcze większy */
+            margin-bottom: 25px;
+            font-weight: 400;
+            line-height: 1.3;
+            color: var(--novotel-grey-dark);
+            max-width: 80%;
+        }
+
+        /* Usunięto .sales-department-contact, gdyż zostało przeniesione */
+
+        .sales-team-cards {
+            display: flex;
+            justify-content: center;
+            gap: 50px; 
+            flex-wrap: wrap; 
+            align-items: flex-start; 
+            margin-top: 30px; /* Dodatkowy margines, by oddzielić od nagłówka */
+            width: 100%; /* Aby karty lepiej się rozkładały */
+        }
+
+        .sales-card {
+            background-color: var(--novotel-white-bg);
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 40px; 
+            text-align: center;
+            width: 600px; /* JESZCZE BARDZIEJ ZWIĘKSZONA szerokość kafelków */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; 
+            box-sizing: border-box; 
+        }
+
+        .sales-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .sales-card img {
+            width: 100%; 
+            max-width: 520px; /* Dopasowanie do nowej szerokości */
+            height: 320px; 
+            object-fit: cover; 
+            margin-bottom: 25px; 
+            border: 4px solid var(--novotel-blue-light); /* ZMIENIONO KOLOR BORDER NA NIEBIESKI */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius-base); 
+        }
+
+        .sales-card h5 {
+            font-size: 2.4em; 
+            margin: 0 0 15px 0; 
+            color: var(--novotel-blue-dark);
+            font-weight: 600;
+        }
+
+        .sales-card p {
+            font-size: 1.6em; 
+            margin: 8px 0; 
+            color: var(--novotel-grey-medium);
+            max-width: 100%; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+        /* --- KONIEC STYLI SPRZEDAWCÓW --- */
+
+
+        /* --- NOWA SEKCJA DLA POKAZU SLAJDÓW SAL KONFERENCYJNYCH --- */
+        /* Ta sekcja nie jest już używana, więc jej style nie mają wpływu. */
+        /* Została przeniesiona do #promo-screen i zmieniona na gallery-container */
+        /* Jest też w pliku HTML sales-screen, ale tam została zakomentowana */
+        .conference-slider-section {
+            display: none; /* Ukryj sekcję, jeśli nie ma być używana */
+        }
+        /* --- KONIEC NOWEJ SEKCJI --- */
+
+
+        /* Responsywność */
+        @media (max-width: 1400px) {
+            #promo-screen .promo-logo-container img { max-width: 350px; }
+            #promo-screen h3 { font-size: 3em; }
+            #promo-screen p { font-size: 1.8em; }
+            .gallery-container { height: 30vh; margin-top: 25px; }
+            .promo-contact-info { margin-top: 30px; padding: 0px 30px; }
+            .promo-contact-info h4 { font-size: 2.2em; margin-bottom: 20px; }
+            .promo-contact-info p { font-size: 1.6em; }
+
+
+            #sales-screen h3 { font-size: 3em; }
+            #sales-screen p.intro-text { font-size: 2.2em; margin-bottom: 20px; }
+            /* .sales-department-contact h4 { font-size: 2.4em; margin-bottom: 25px; } */
+            /* .sales-department-contact p { font-size: 1.6em; } */
+            .sales-team-cards { gap: 40px; margin-top: 25px; } /* Dostosowany gap */
+            .sales-card { width: 500px; padding: 35px; } /* Dostosowana szerokość */
+            .sales-card img { height: 280px; max-width: 420px; }
+            .sales-card h5 { font-size: 2.2em; }
+            .sales-card p { font-size: 1.5em; }
+
+            /* conference-slider-section jest tylko na sales-screen */
+            /* .conference-slider-section h4 { font-size: 2.4em; margin-bottom: 25px; }
+            .conference-slider-container { height: 350px; } */
+        }
+        @media (max-width: 1024px) {
+            body { padding: 25px; }
+            #promo-screen { padding: 30px; }
+            #promo-screen .promo-logo-container img { max-width: 300px; }
+            #promo-screen h3 { font-size: 2.5em; }
+            #promo-screen p { font-size: 1.5em; }
+            .gallery-container { height: 25vh; margin-top: 20px; }
+            .promo-contact-info { margin-top: 25px; padding: 0px 25px; }
+            .promo-contact-info h4 { font-size: 2em; margin-bottom: 15px; }
+            .promo-contact-info p { font-size: 1.4em; }
+
+            #sales-screen { padding: 30px; gap: 25px; }
+            #sales-screen h3 { font-size: 2.5em; }
+            #sales-screen p.intro-text { font-size: 2em; margin-bottom: 18px; }
+            /* .sales-department-contact h4 { font-size: 2em; margin-bottom: 20px; } */
+            /* .sales-department-contact p { font-size: 1.4em; } */
+            .sales-team-cards { gap: 30px; margin-top: 20px; } /* Dostosowany gap */
+            .sales-card { width: 400px; padding: 30px; } /* Dostosowana szerokość */
+            .sales-card img { height: 260px; max-width: 340px; }
+            .sales-card h5 { font-size: 1.8em; }
+            .sales-card p { font-size: 1.3em; }
+
+            /* conference-slider-section jest tylko na sales-screen */
+            /* .conference-slider-section h4 { font-size: 2em; margin-bottom: 20px; }
+            .conference-slider-container { height: 300px; } */
+        }
+        @media (max-width: 768px) {
+            body { padding: 20px; }
+            #promo-screen { padding: 20px; gap: 15px; }
+            #promo-screen .promo-logo-container img { max-width: 250px; margin-bottom: 15px; }
+            #promo-screen h3 { font-size: 2em; margin-bottom: 15px;}
+            #promo-screen p { font-size: 1.2em; margin-bottom: 10px;}
+            .gallery-container { height: 20vh; margin-top: 15px; }
+            .promo-contact-info { margin-top: 20px; padding: 0px 20px; }
+            .promo-contact-info h4 { font-size: 1.8em; margin-bottom: 10px; }
+            .promo-contact-info p { font-size: 1.2em; margin: 5px 0; }
+
+
+            #sales-screen { padding: 20px; gap: 20px; }
+            #sales-screen h3 { font-size: 2em; }
+            #sales-screen p.intro-text { font-size: 1.5em; margin-bottom: 15px; }
+            /* .sales-department-contact h4 { font-size: 1.8em; margin-bottom: 15px; } */
+            /* .sales-department-contact p { font-size: 1.2em; margin: 5px 0; } */
+            .sales-team-cards { flex-direction: column; align-items: center; gap: 15px; margin-top: 15px; } /* Powrót do kolumny dla małych ekranów */
+            .sales-card { width: 90%; max-width: 350px; padding: 25px; } 
+            .sales-card img { height: 220px; max-width: 300px; margin-bottom: 15px; }
+            .sales-card h5 { font-size: 1.6em; }
+            .sales-card p { font-size: 1.2em; }
+
+            /* conference-slider-section jest tylko na sales-screen */
+            /* .conference-slider-section h4 { font-size: 1.8em; margin-bottom: 15px; }
+            .conference-slider-container { height: 250px; } */
+        }
+        @media (max-width: 480px) {
+            body { padding: 15px; }
+            #promo-screen { padding: 15px; gap: 10px; }
+            #promo-screen .promo-logo-container img { max-width: 200px; margin-bottom: 10px; }
+            #promo-screen h3 { font-size: 1.6em; margin-bottom: 10px;}
+            #promo-screen p { font-size: 1em; margin-bottom: 8px;}
+            .gallery-container { height: 15vh; margin-top: 10px; }
+            .promo-contact-info { margin-top: 15px; padding: 0px 15px; }
+            .promo-contact-info h4 { font-size: 1.5em; margin-bottom: 8px; }
+            .promo-contact-info p { font-size: 1em; margin: 3px 0; }
+
+
+            #sales-screen { padding: 15px; gap: 15px; }
+            #sales-screen h3 { font-size: 1.6em; }
+            #sales-screen p.intro-text { font-size: 1.2em; margin-bottom: 10px; }
+            /* .sales-department-contact h4 { font-size: 1.5em; margin-bottom: 10px; } */
+            /* .sales-department-contact p { font-size: 1em; margin: 3px 0; } */
+            .sales-card { width: 95%; max-width: 300px; padding: 20px; } 
+            .sales-card img { height: 180px; max-width: 280px; margin-bottom: 10px; }
+            .sales-card h5 { font-size: 1.4em; }
+            .sales-card p { font-size: 1.1em; }
+
+            /* conference-slider-section jest tylko na sales-screen */
+            /* .conference-slider-section h4 { font-size: 1.5em; margin-bottom: 10px; }
+            .conference-slider-container { height: 200px; } */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Główna zawartość ekranu z konferencjami -->
+    <div id="main-content" class="main-wrapper">
+        <div class="header-section">
+            <div class="logo-container">
+                <img src="novotel_logo.png" alt="Novotel Logo" class="logo-novotel">
+            </div>
+            <div id="current-time"></div>
+            <div id="current-date"></div>
+        </div>
+
+        <div class="meetings-section-wrapper">
+            <div class="meetings-section-header">
+                <h2>Dzisiejsze Spotkania</h2>
+            </div>
+            
+            <ul id="meeting-list" class="meeting-list">
+                <!-- Konferencje będą tutaj dodawane przez JavaScript -->
+            </ul>
+            <p id="no-meetings-message" class="no-meetings-message">Brak zaplanowanych konferencji na dziś.</p>
+        </div>
+    </div>
+
+    <!-- Ekran promocyjny -->
+    <div id="promo-screen">
+        <div class="promo-logo-container">
+            <img src="novotel_logo_2.png" alt="Novotel Logo">
+        </div>
+        <h3>Następne spotkanie? Zróbmy je razem.</h3>
+        <p>Skontaktuj się bezpośrednio z działem sprzedaży, aby omówić szczegóły i zarezerwować idealną przestrzeń dla Twojego wydarzenia!</p>
+        
+        <div class="gallery-container">
+            <!-- Zdjęcia sal konferencyjnych (slider) będą ładowane przez JS -->
+        </div>
+
+        <!-- Nowa sekcja z ogólnymi danymi kontaktowymi na ekranie promocyjnym -->
+        <div class="promo-contact-info">
+            <h4>Ogólne Dane Kontaktowe Działu Sprzedaży</h4>
+            <p>Telefon: +48 123 123 123</p>
+            <p>E-mail: konferencje.hotel@accor.com</p>
+        </div>
+    </div>
+
+    <!-- NOWA DEDYKOWANA STRONA DLA SPRZEDAWCÓW -->
+    <div id="sales-screen">
+        <h3>Nasz Dział Sprzedaży</h3>
+        <p class="intro-text">Jesteśmy tutaj, aby pomóc w organizacji Twojego idealnego wydarzenia!</p>
+        
+        <!-- Usunięto sales-department-contact stąd -->
+
+        <div id="sales-team-cards" class="sales-team-cards">
+            <!-- Karty zespołu sprzedaży będą ładowane przez JS -->
+        </div>
+
+        <!-- USUNIĘTO conference-slider-section Z TEJ STRONY -->
+    </div>
+    <!-- KONIEC NOWEJ STRONY -->
+
+
+    <script>
+        /* ========================================================================= */
+        /* === SEKACJA DO EDYCJI KONFERENCJI - EDYTOWAĆ TYLKO PONIŻEJ TEJ LINII === */
+        /* ========================================================================= */
+        
+        // --- ZMIENNE BĘDĄ POBIERANE Z JSON ---
+        let todayMeetings = [];
+        let conferenceRoomImages = [];
+        let salesTeamMembers = [];
+        
+        /* =========================================================================== */
+        /* === KONIEC SEKCJI EDYCJI KONFERENCJI - NIE EDYTOWAĆ PONIŻSZEGO KODU! === */
+        /* =========================================================================== */
+
+
+        // Globalne zmienne do zarządzania cyklem rozwijania kafelków (NIE EDYTOWAĆ!)
+        let currentExpandedMeetingIndex = -1;
+        let meetingExpansionInterval = null;
+        let isExpansionCycleActive = true; 
+        
+        const EXPANSION_DURATION_MS = 10 * 1000; 
+        const CYCLE_INTERVAL_MS = 20 * 1000;    
+
+        // Zmienne dla automatycznego przewijania (NIE EDYTOWAĆ!)
+        let autoScrollInterval = null;
+        const SCROLL_SPEED_PX = 2;
+        const SCROLL_INTERVAL_MS = 50;
+        let isScrollingPaused = false;
+        let isScrollingBackToTop = false; 
+        
+        const PAUSE_SCROLL_DURATION_MS = EXPANSION_DURATION_MS + 2000; 
+        const SCROLL_RESET_DELAY_MS = 3000;
+        const SCROLL_ANIMATION_DURATION_MS = 500;
+
+        // --- ZMIENNE DLA EKRANU PROMOCYJNEGO ---
+        const PROMO_INTERVAL_MS = 1 * 60 * 1000; // Całkowity czas cyklu (main -> promo -> sales -> main)
+        const PROMO_DISPLAY_DURATION_MS = 15 * 1000; // Ekran promocyjny wyświetlany przez 15 sekund
+        const SALES_DISPLAY_DURATION_MS = 15 * 1000; // Nowy: Czas wyświetlania strony sprzedawców
+
+        // Pozostały czas w głównym cyklu przed powrotem do main
+        const MAIN_RETURN_DELAY = PROMO_INTERVAL_MS - PROMO_DISPLAY_DURATION_MS - SALES_DISPLAY_DURATION_MS;
+        // Upewniamy się, że MAIN_RETURN_DELAY nie jest ujemne
+        const finalMainReturnDelay = Math.max(0, MAIN_RETURN_DELAY);
+
+
+        const GALLERY_IMAGE_CHANGE_INTERVAL_MS = 5 * 1000; // Zmiana zdjęcia w górnej galerii co 5 sekund
+        // const CONFERENCE_SLIDER_CHANGE_INTERVAL_MS = 7 * 1000; // Niepotrzebny już interwał, bo slidera sal nie ma na sales-screen
+
+        let currentGalleryImageIndex = 0;
+        let galleryInterval = null;
+        // let currentConferenceImageIndex = 0; // Niepotrzebne
+        // let conferenceSliderInterval = null; // Niepotrzebne
+
+        // Referencje do elementów DOM
+        const mainContent = document.getElementById('main-content');
+        const promoScreen = document.getElementById('promo-screen');
+        const salesScreen = document.getElementById('sales-screen'); 
+        
+        // Globalne interwały/timeouty do zarządzania stanem
+        let clockAndMeetingUpdateInterval = null;
+        let switchScreenTimeout = null; 
+        let autoPageRefreshTimeout = null; 
+        let currentScreen = 'main'; // 'main', 'promo' or 'sales'
+
+
+        // --- Funkcje pomocnicze - NIE EDYTOWAĆ! ---
+
+        async function fetchData() {
+            try {
+                const response = await fetch('data.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                todayMeetings = data.todayMeetings || [];
+                conferenceRoomImages = data.conferenceRoomImages || [];
+                salesTeamMembers = data.salesTeamMembers || [];
+
+                console.log("Data loaded from JSON:", data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                // Ustaw wartości domyślne w przypadku błędu
+                todayMeetings = [];
+                conferenceRoomImages = [];
+                salesTeamMembers = [];
+            }
+        }
+
+        function updateTimeAndDate() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
+
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('pl-PL', options);
+            document.getElementById('current-date').textContent = dateString;
+        }
+
+        function displayMeetings() {
+            const meetingList = document.getElementById('meeting-list');
+            const noMeetingsMessage = document.getElementById('no-meetings-message');
+
+            if (todayMeetings.length === 0) {
+                noMeetingsMessage.style.display = 'block'; // Pokaż wiadomość
+                meetingList.style.display = 'none'; // Ukryj listę
+                if (meetingExpansionInterval) clearInterval(meetingExpansionInterval);
+                meetingExpansionInterval = null;
+                stopAutoScroll();
+                return;
+            } else {
+                noMeetingsMessage.style.display = 'none'; // Ukryj wiadomość
+                meetingList.style.display = 'grid'; // Pokaż listę
+            }
+
+            meetingList.innerHTML = '';
+
+            // Sortowanie po dacie (jeśli istnieje) i nazwie pokoju
+            todayMeetings.sort((a, b) => {
+                // Uproszczone sortowanie dla przykładu, zakładając format "Dzień miesiąca Rok"
+                // Do produkcji, lepsza byłaby konwersja na Date obiekt do porównania
+                const dateA = a.date || "";
+                const dateB = b.date || "";
+                
+                if (dateA !== dateB) {
+                    return dateA.localeCompare(dateB); // Sortuj alfabetycznie daty (lub implementuj parsowanie)
+                }
+                return a.room.localeCompare(b.room); // Sortuj po pokoju, jeśli daty są takie same
+            });
+
+
+            todayMeetings.forEach((meeting, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'meeting-item-wrapper';
+                wrapper.setAttribute('data-meeting-id', `meeting-${index}`);
+
+                if (meeting.clientLogo) {
+                    const clientLogoBanner = document.createElement('div');
+                    clientLogoBanner.className = 'client-logo-banner';
+                    const clientLogoImg = document.createElement('img');
+                    clientLogoImg.src = meeting.clientLogo;
+                    clientLogoImg.alt = `Logo ${meeting.title.split(' - ')[1] || 'Klienta'}`;
+                    clientLogoBanner.appendChild(clientLogoImg);
+                    wrapper.appendChild(clientLogoBanner);
+                }
+
+                const li = document.createElement('li');
+                li.className = 'meeting-item';
+                
+                li.setAttribute('data-wrapper-id', `meeting-${index}`);
+                li.setAttribute('data-index', index);
+
+                let innerHTML = `
+                    <h3>${meeting.title}</h3>
+                `;
+                if (meeting.date) { // Dodaj datę, jeśli istnieje
+                    innerHTML += `<p class="date">${meeting.date}</p>`;
+                }
+                innerHTML += `<p class="room">${meeting.room}</p>`;
+
+                if (meeting.description && meeting.description.trim() !== '') {
+                    innerHTML += `<p class="description expandable">${meeting.description}</p>`;
+                    li.setAttribute('data-has-description', 'true');
+                } else {
+                    li.setAttribute('data-has-description', 'false');
+                }
+                
+                li.innerHTML = innerHTML;
+                
+                wrapper.appendChild(li);
+                meetingList.appendChild(wrapper);
+            });
+            startMeetingExpansionCycle();
+            startAutoScroll();
+        }
+
+        function startMeetingExpansionCycle() {
+            const allMeetingItems = Array.from(document.querySelectorAll('.meeting-item'));
+            const expandableMeetingItems = allMeetingItems.filter(item => item.getAttribute('data-has-description') === 'true');
+            
+            if (expandableMeetingItems.length === 0) {
+                if (meetingExpansionInterval) clearInterval(meetingExpansionInterval);
+                meetingExpansionInterval = null;
+                return;
+            }
+
+            if (meetingExpansionInterval) {
+                clearInterval(meetingExpansionInterval);
+                meetingExpansionInterval = null;
+            }
+            
+            if (!isExpansionCycleActive) {
+                return; 
+            }
+
+            const meetingList = document.getElementById('meeting-list');
+            
+            const expandAndCollapse = (itemToExpand) => {
+                if (!isExpansionCycleActive) {
+                    if (meetingExpansionInterval) clearInterval(meetingExpansionInterval);
+                    meetingExpansionInterval = null;
+                    return;
+                }
+
+                document.querySelectorAll('.meeting-item.expanded').forEach(expandedItem => {
+                    expandedItem.classList.remove('expanded');
+                    expandedItem.closest('.meeting-item-wrapper').classList.remove('expanded-wrapper'); // Usuń klasę z wrappera
+                });
+
+                if (itemToExpand && itemToExpand.getAttribute('data-has-description') === 'true') {
+                    pauseAutoScroll(PAUSE_SCROLL_DURATION_MS); 
+                    
+                    itemToExpand.classList.add('expanded');
+                    itemToExpand.closest('.meeting-item-wrapper').classList.add('expanded-wrapper'); // Dodaj klasę do wrappera
+                    
+                    setTimeout(() => {
+                        if (!isExpansionCycleActive) return;
+                        itemToExpand.scrollIntoView({ behavior: 'smooth', block: 'end' }); 
+                        
+                        setTimeout(() => {
+                            if (!isExpansionCycleActive) return;
+                            itemToExpand.classList.remove('expanded');
+                            itemToExpand.closest('.meeting-item-wrapper').classList.remove('expanded-wrapper'); // Usuń klasę z wrappera
+                        }, EXPANSION_DURATION_MS);
+
+                    }, 100); 
+                }
+            };
+
+            const cycleMeetings = () => {
+                 if (!isExpansionCycleActive) {
+                    if (meetingExpansionInterval) clearInterval(meetingExpansionInterval);
+                    meetingExpansionInterval = null;
+                    return;
+                }
+                currentExpandedMeetingIndex = (currentExpandedMeetingIndex + 1) % expandableMeetingItems.length;
+                const nextMeetingItem = expandableMeetingItems[currentExpandedMeetingIndex];
+                
+                expandAndCollapse(nextMeetingItem);
+            };
+
+            cycleMeetings(); 
+
+            meetingExpansionInterval = setInterval(cycleMeetings, CYCLE_INTERVAL_MS);
+        }
+
+        function startAutoScroll() {
+            const meetingList = document.getElementById('meeting-list');
+
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+            }
+            
+            if (meetingList.scrollHeight <= meetingList.clientHeight) {
+                console.log("Zawartość mieści się, przewijanie niepotrzebne.");
+                meetingList.scrollTop = 0;
+                return;
+            }
+
+            autoScrollInterval = setInterval(() => {
+                if (isScrollingPaused) return;
+
+                const maxScroll = meetingList.scrollHeight - meetingList.clientHeight;
+                
+                if (isScrollingBackToTop) {
+                    if (meetingList.scrollTop > 0) {
+                        meetingList.scrollTop -= SCROLL_SPEED_PX * 2;
+                        if (meetingList.scrollTop <= 0) {
+                            meetingList.scrollTop = 0;
+                            isScrollingBackToTop = false;
+                            isScrollingPaused = false;
+                            isExpansionCycleActive = true;
+                            startMeetingExpansionCycle();
+                        }
+                    }
+                } else {
+                    if (meetingList.scrollTop < maxScroll) {
+                        meetingList.scrollTop += SCROLL_SPEED_PX;
+                    } else {
+                        if (meetingList.scrollTop >= maxScroll) {
+                            isScrollingPaused = true;
+                            isExpansionCycleActive = false;
+                            if (meetingExpansionInterval) clearInterval(meetingExpansionInterval);
+                            meetingExpansionInterval = null;
+                            document.querySelectorAll('.meeting-item.expanded').forEach(expandedItem => {
+                                expandedItem.classList.remove('expanded');
+                                expandedItem.closest('.meeting-item-wrapper').classList.remove('expanded-wrapper'); // Usuń klasę z wrappera
+                            });
+
+                            setTimeout(() => {
+                                isScrollingBackToTop = true;
+                            }, SCROLL_RESET_DELAY_MS);
+                        }
+                    }
+                }
+            }, SCROLL_INTERVAL_MS);
+        }
+
+        function stopAutoScroll() {
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+            }
+            isScrollingBackToTop = false;
+            isExpansionCycleActive = true;
+        }
+
+        function pauseAutoScroll(duration) {
+            isScrollingPaused = true;
+            setTimeout(() => {
+                isScrollingPaused = false;
+            }, duration);
+        }
+
+        // --- FUNKCJE DLA EKRANU PROMOCYJNEGO I ZARZĄDZANIA WIDOCZNOŚCIĄ ---
+        function loadGalleryImages() {
+            const galleryContainer = document.querySelector('.gallery-container');
+            galleryContainer.innerHTML = '';
+
+            if (conferenceRoomImages.length === 0) return;
+
+            conferenceRoomImages.forEach((imageName, index) => {
+                const img = document.createElement('img');
+                img.src = imageName;
+                img.alt = `Sala konferencyjna ${index + 1}`;
+                img.classList.add('gallery-image');
+                if (index === 0) {
+                    img.classList.add('active');
+                }
+                galleryContainer.appendChild(img);
+            });
+        }
+
+        function changeGalleryImage() {
+            const images = document.querySelectorAll('.gallery-image');
+            if (images.length === 0) return;
+
+            images[currentGalleryImageIndex].classList.remove('active');
+            currentGalleryImageIndex = (currentGalleryImageIndex + 1) % images.length;
+            images[currentGalleryImageIndex].classList.add('active');
+        }
+
+        function loadSalesTeamCards() {
+            const salesTeamCardsContainer = document.getElementById('sales-team-cards');
+            salesTeamCardsContainer.innerHTML = ''; 
+
+            salesTeamMembers.forEach(member => {
+                const card = document.createElement('div');
+                card.className = 'sales-card';
+                card.innerHTML = `
+                    <img src="${member.photo}" alt="${member.name}">
+                    <h5>${member.name}</h5>
+                    <p>E-mail: ${member.email}</p> 
+                    <p>Telefon: ${member.phone}</p> 
+                `;
+                salesTeamCardsContainer.appendChild(card);
+            });
+        }
+        
+        // Ta funkcja nie jest już wywoływana na sales-screen
+        function startConferenceSlider() {
+            // const sliderContainer = document.getElementById('conference-slider-container');
+            // if (!sliderContainer) return; // Upewnij się, że element istnieje
+            // sliderContainer.innerHTML = ''; 
+
+            // if (conferenceRoomImages.length === 0) return;
+
+            // conferenceRoomImages.forEach((imageName, index) => {
+            //     const img = document.createElement('img');
+            //     img.src = imageName;
+            //     img.alt = `Sala konferencyjna ${index + 1}`;
+            //     img.classList.add('conference-slider-image');
+            //     if (index === 0) {
+            //         img.classList.add('active');
+            //     }
+            //     sliderContainer.appendChild(img);
+            // });
+
+            // currentConferenceImageIndex = 0;
+            // if (conferenceRoomImages.length > 1) {
+            //     if (conferenceSliderInterval) clearInterval(conferenceSliderInterval); 
+            //     conferenceSliderInterval = setInterval(changeConferenceSliderImage, CONFERENCE_SLIDER_CHANGE_INTERVAL_MS);
+            // }
+        }
+
+        // Ta funkcja nie jest już wywoływana na sales-screen
+        function changeConferenceSliderImage() {
+            // const images = document.querySelectorAll('.conference-slider-image');
+            // if (images.length === 0) return;
+
+            // images[currentConferenceImageIndex].classList.remove('active');
+            // currentConferenceImageIndex = (currentConferenceImageIndex + 1) % images.length;
+            // images[currentConferenceImageIndex].classList.add('active');
+        }
+
+
+        // --- START/STOP FUNKCJI DLA GŁÓWNEGO EKRANU ---
+        function startMainScreen() {
+            console.log('START: Main Screen');
+            mainContent.style.visibility = 'visible';
+            mainContent.style.opacity = '1';
+            displayMeetings(); 
+        }
+
+        function stopMainScreen() {
+            console.log('STOP: Main Screen');
+            mainContent.style.opacity = '0';
+            if (meetingExpansionInterval) clearInterval(meetingExpansionInterval);
+            meetingExpansionInterval = null;
+            stopAutoScroll();
+            setTimeout(() => {
+                mainContent.style.visibility = 'hidden';
+            }, 500); 
+        }
+
+        // --- START/STOP FUNKCJI DLA EKRANU PROMOCYJNEGO ---
+        function startPromoScreen() {
+            console.log('START: Promo Screen');
+            promoScreen.style.display = 'flex'; 
+            setTimeout(() => {
+                promoScreen.classList.add('active'); 
+            }, 10); 
+            
+            // Tylko jedna galeria na promo screen
+            loadGalleryImages();
+            currentGalleryImageIndex = 0;
+            if (conferenceRoomImages.length > 1) {
+                galleryInterval = setInterval(changeGalleryImage, GALLERY_IMAGE_CHANGE_INTERVAL_MS);
+            }
+        }
+
+        function stopPromoScreen() {
+            console.log('STOP: Promo Screen');
+            promoScreen.classList.remove('active'); 
+            if (galleryInterval) clearInterval(galleryInterval);
+            galleryInterval = null;
+            setTimeout(() => {
+                promoScreen.style.display = 'none'; 
+            }, 1000); 
+        }
+
+        // --- START/STOP FUNKCJI DLA EKRANU SPRZEDAWCÓW (NOWY) ---
+        function startSalesScreen() {
+            console.log('START: Sales Screen');
+            salesScreen.style.display = 'flex';
+            setTimeout(() => {
+                salesScreen.classList.add('active');
+            }, 10);
+
+            loadSalesTeamCards(); 
+            // startConferenceSlider() - usunięte z sales-screen
+        }
+
+        function stopSalesScreen() {
+            console.log('STOP: Sales Screen');
+            salesScreen.classList.remove('active');
+            // if (conferenceSliderInterval) clearInterval(conferenceSliderInterval); // usunięte z sales-screen
+            // conferenceSliderInterval = null;
+            setTimeout(() => {
+                salesScreen.style.display = 'none';
+            }, 1000);
+        }
+
+
+        // --- FUNKCJA ZARZĄDZAJĄCA PRZEŁĄCZANIEM EKRANÓW ---
+        function switchScreens() {
+            console.log('Switching screens. Current:', currentScreen);
+            if (switchScreenTimeout) clearTimeout(switchScreenTimeout); 
+
+            if (currentScreen === 'main') {
+                stopMainScreen();
+                setTimeout(() => {
+                    startPromoScreen();
+                    currentScreen = 'promo';
+                    switchScreenTimeout = setTimeout(switchScreens, PROMO_DISPLAY_DURATION_MS);
+                }, 500); 
+            } else if (currentScreen === 'promo') { // Po promo idziemy do sales
+                stopPromoScreen();
+                setTimeout(() => {
+                    startSalesScreen();
+                    currentScreen = 'sales';
+                    switchScreenTimeout = setTimeout(switchScreens, SALES_DISPLAY_DURATION_MS);
+                }, 1000); // Dłuższe opóźnienie, bo promo znika wolniej
+            } else { // Po sales wracamy do main
+                stopSalesScreen();
+                setTimeout(() => {
+                    startMainScreen();
+                    currentScreen = 'main';
+                    // Czas do powrotu na main: CAŁKOWITY CYKL - CZAS PROMO - CZAS SALES
+                    // Używamy zmiennej finalMainReturnDelay, aby uniknąć ujemnych wartości
+                    switchScreenTimeout = setTimeout(switchScreens, finalMainReturnDelay);
+                }, 1000); // Dłuższe opóźnienie, bo sales znika wolniej
+            }
+        }
+
+        // --- NOWA FUNKCJA DO AUTOMATYCZNEGO ODŚWIEŻANIA CAŁEJ STRONY ---
+        function setupAutoPageRefresh() {
+            const REFRESH_INTERVAL_MS = 60 * 60 * 1000; 
+
+            if (autoPageRefreshTimeout) {
+                clearTimeout(autoPageRefreshTimeout);
+            }
+
+            autoPageRefreshTimeout = setTimeout(() => {
+                console.log('Automatyczne odświeżanie strony...');
+                location.reload(); 
+            }, REFRESH_INTERVAL_MS);
+            console.log(`Następne pełne odświeżenie strony za ${REFRESH_INTERVAL_MS / 1000 / 60} minut.`);
+        }
+
+
+        // --- INICJALIZACJA PRZY ŁADOWANIU STRONY ---
+        console.log('Initial script load.');
+
+        async function init() {
+            await fetchData(); // Pobierz dane zanim cokolwiek się zacznie
+
+            mainContent.style.visibility = 'visible';
+            mainContent.style.opacity = '1';
+            promoScreen.style.display = 'none'; 
+            promoScreen.classList.remove('active');
+            salesScreen.style.display = 'none'; // Ukrywamy sales screen na start
+            salesScreen.classList.remove('active');
+
+            updateTimeAndDate(); 
+            clockAndMeetingUpdateInterval = setInterval(() => {
+                updateTimeAndDate();
+            }, 1000); 
+
+            startMainScreen();
+
+            // Ustawienie pierwszego przełączenia po PROMO_INTERVAL_MS
+            switchScreenTimeout = setTimeout(switchScreens, PROMO_INTERVAL_MS);
+
+            setupAutoPageRefresh();
+        }
+
+        init(); // Wywołaj funkcję inicjalizującą
+
+
+        // --- OBSŁUGA ZMIANY ROZMIARU OKNA ---
+        window.addEventListener('resize', () => {
+            console.log('Window resized. Re-initializing...');
+            if (switchScreenTimeout) clearTimeout(switchScreenTimeout);
+            if (autoPageRefreshTimeout) clearTimeout(autoPageRefreshTimeout); 
+            stopMainScreen(); 
+            stopPromoScreen(); 
+            stopSalesScreen(); // Stopujemy również sales screen
+
+            setTimeout(() => {
+                mainContent.style.visibility = 'visible';
+                mainContent.style.opacity = '1';
+                promoScreen.style.display = 'none'; 
+                promoScreen.classList.remove('active');
+                salesScreen.style.display = 'none'; 
+                salesScreen.classList.remove('active');
+                currentScreen = 'main';
+
+                startMainScreen(); 
+                switchScreenTimeout = setTimeout(switchScreens, PROMO_INTERVAL_MS);
+                setupAutoPageRefresh(); 
+            }, 1500); 
+        });
+
+    </script>
+
+</body>
+</html>

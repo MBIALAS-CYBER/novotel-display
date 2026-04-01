@@ -1,0 +1,123 @@
+{
+
+  "todayMeetings": [
+
+    {
+
+      "title": "Konferencja Biznesowa - pupcia",
+
+      "room": "Posnania",
+
+      "date": "25 października 2023",
+
+      "description": " ",
+
+      "clientLogo": "rossmann_logo.png",
+
+      "status": "upcoming"
+
+    },
+
+    {
+
+      "title": "Warsztat 'Nowe kartofelk'",
+
+      "room": "Malta",
+
+      "date": "25 października 2023",
+
+      "description": " ",
+
+      "clientLogo": "google_logo.png",
+
+      "status": "upcoming"
+
+    },
+
+    {
+
+      "title": "Rekrutacja Inżynierów II",
+
+      "room": "Gdańsk",
+
+      "date": "26 października 2023",
+
+      "description": " ",
+
+      "clientLogo": "tech_recruitment_logo.png",
+
+      "status": "upcoming"
+
+    },
+
+    {
+
+      "title": "Szkolenie BHP",
+
+      "room": "Wawel",
+
+      "date": "27 października 2023",
+
+      "description": " ",
+
+      "clientLogo": "default_logo.png",
+
+      "status": "upcoming"
+
+    }
+
+  ],
+
+  "conferenceRoomImages": [
+
+    "sala_konferencyjna_1.jpg",
+
+    "sala_konferencyjna_2.jpg",
+
+    "sala_konferencyjna_3.jpg",
+
+    "sala_konferencyjna_4.jpg"
+
+  ],
+
+  "salesTeamMembers": [
+
+    {
+
+      "photo": "sales_person_1.jpg",
+
+      "name": "Mikołaj Mosiądz",
+
+      "email": "Mikolaj.Mosiadz@accor.com",
+
+      "phone": "+48 123 456 789"
+
+    },
+
+    {
+
+      "photo": "sales_person_3.jpg",
+
+      "name": "Mirella Kwiatkiewicz",
+
+      "email": "Mirella.Kwiatkiewicz@accor.com",
+
+      "phone": "+48 987 654 321"
+
+    },
+
+    {
+
+      "photo": "sales_person_2.jpg",
+
+      "name": "Adriana Los",
+
+      "email": "Adriana.Los@accor.com",
+
+      "phone": "+48 555 111 222"
+
+    }
+
+  ]
+
+}
