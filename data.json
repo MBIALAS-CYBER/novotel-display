@@ -4,42 +4,41 @@
       "title": "Konferencja Biznesowa - Rossmann",
       "room": "Posnania",
       "date": "25 października 2023",
-      "description": "Spotkanie zarządu i kierowników regionów w celu omówienia strategii rozwoju na nadchodzący rok.",
+      "description": " ",
       "clientLogo": "rossmann_logo.png"
     },
     {
       "title": "Warsztat 'Nowe Technologie'",
       "room": "Malta",
       "date": "25 października 2023",
-      "description": "Praktyczne warsztaty dla deweloperów z wykorzystania najnowszych technologii w frontendzie i backendzie.",
+      "description": " ",
       "clientLogo": "Google_Logo.png"
     },
     {
       "title": "Rekrutacja Inżynierów II",
       "room": "Gdańsk",
       "date": "26 października 2023",
-      "description": "Sesje rekrutacyjne z kandydatami na stanowiska inżynierskie w dziale R&D.",
+      "description": " ",
       "clientLogo": "tech_recruitment_logo.png"
     },
     {
       "title": "Szkolenie Sprzedażowe - KBC",
       "room": "Warta",
       "date": "26 października 2023",
-      "description": "Intensywne szkolenie z technik sprzedaży i obsługi klienta dla nowego zespołu handlowego.",
+      "description": " ",
       "clientLogo": "kbc_logo.png"
     },
     {
       "title": "Spotkanie z Klientami - Global Solutions",
       "room": "Bałtyk",
       "date": "26 października 2023",
-      "description": "Prezentacja nowych produktów i usług dla kluczowych partnerów biznesowych.",
+      "description": " ",
       "clientLogo": "global_solutions_logo.png"
     }
   ],
   "conferenceRoomImages": [
     "sala_konferencyjna_1.jpg",
     "sala_konferencyjna_2.jpg",
-    "sala_konferencyjna_3.jpg"
   ],
   "salesTeamMembers": [
     {
